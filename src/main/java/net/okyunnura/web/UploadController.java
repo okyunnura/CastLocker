@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UploadController {
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String get(Model model) {
+	public String upload(Model model) {
 		return "upload";
 	}
 }

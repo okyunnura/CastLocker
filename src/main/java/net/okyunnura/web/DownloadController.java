@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class DownloadController {
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String get(Model model) {
+	public String download(Model model) {
 		return "download";
 	}
 }

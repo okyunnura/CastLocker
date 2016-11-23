@@ -2,14 +2,24 @@ buildscript {
     ext {
         springBootVersion = '1.4.2.RELEASE'
         springLoadedVersion = '1.2.6.RELEASE'
+        propdepsPluginVersion = '0.0.7'
     }
     repositories {
         mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.springframework:springloaded:${springLoadedVersion}")
+        classpath("org.springframework.build.gradle:propdeps-plugin:${propdepsPluginVersion}")
     }
+}
+
+configure(allprojects) {
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
 }
 
 apply plugin: 'java'
@@ -31,6 +41,8 @@ repositories {
 }
 
 dependencies {
+    optional("org.springframework.boot:spring-boot-configuration-processor")
+
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-web')
     compileOnly('org.projectlombok:lombok')

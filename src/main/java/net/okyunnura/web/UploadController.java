@@ -4,7 +4,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Statement;
 import com.amazonaws.auth.policy.actions.S3Actions;
-import com.amazonaws.auth.policy.resources.S3BucketResource;
+import com.amazonaws.auth.policy.resources.S3ObjectResource;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.model.Credentials;
 import com.amazonaws.services.securitytoken.model.GetFederationTokenRequest;
@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,18 +41,17 @@ public class UploadController {
 
 		redirectAttributes.getFlashAttributes().clear();
 		redirectAttributes.addAttribute("token", token);
-
 		return "redirect:/upload/{token}";
 	}
 
 	@RequestMapping(value = "/{token}", method = RequestMethod.GET)
-	public String page(@PathVariable String token) {
+	public String page(@PathVariable String token, Model model) {
 
-		Statement listStatement = new Statement(Statement.Effect.Allow)
+		Statement allActionStatement = new Statement(Statement.Effect.Allow)
 				.withActions(S3Actions.AllS3Actions)
-				.withResources(new S3BucketResource(applicationProperties.getS3BucketName()));
+				.withResources(new S3ObjectResource(applicationProperties.getS3BucketName(), token + "/*"));
 
-		Policy policy = new Policy().withStatements(listStatement);
+		Policy policy = new Policy().withStatements(allActionStatement);
 
 		GetFederationTokenRequest request = new GetFederationTokenRequest()
 				.withDurationSeconds(3600)
@@ -66,6 +66,10 @@ public class UploadController {
 		logger.info("secretkey:" + credentials.getSecretAccessKey());
 		logger.info("sessiontoken:" + credentials.getSessionToken());
 		logger.info("expiration:" + credentials.getExpiration().toString());
+
+		model.addAttribute("token", token);
+		model.addAttribute("backetName", applicationProperties.getS3BucketName());
+		model.addAttribute("credentials", credentials);
 		return "upload";
 	}
 }

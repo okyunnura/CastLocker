@@ -14,9 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -33,9 +34,18 @@ public class UploadController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String upload(Model model) {
+	public String generate(RedirectAttributes redirectAttributes) {
 
-		String token = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+		String token = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
+
+		redirectAttributes.getFlashAttributes().clear();
+		redirectAttributes.addAttribute("token", token);
+
+		return "redirect:/upload/{token}";
+	}
+
+	@RequestMapping(value = "/{token}", method = RequestMethod.GET)
+	public String page(@PathVariable String token) {
 
 		Statement listStatement = new Statement(Statement.Effect.Allow)
 				.withActions(S3Actions.AllS3Actions)
@@ -52,11 +62,10 @@ public class UploadController {
 		GetFederationTokenResult result = client.getFederationToken(request);
 
 		Credentials credentials = result.getCredentials();
-		logger.info("accesskey:"+credentials.getAccessKeyId());
-		logger.info("secretkey:"+credentials.getSecretAccessKey());
-		logger.info("sessiontoken:"+credentials.getSessionToken());
-		logger.info("expiration:"+credentials.getExpiration().toString());
-
+		logger.info("accesskey:" + credentials.getAccessKeyId());
+		logger.info("secretkey:" + credentials.getSecretAccessKey());
+		logger.info("sessiontoken:" + credentials.getSessionToken());
+		logger.info("expiration:" + credentials.getExpiration().toString());
 		return "upload";
 	}
 }

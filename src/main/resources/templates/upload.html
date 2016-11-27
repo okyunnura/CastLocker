@@ -6,8 +6,13 @@
 		<title>Upload</title>
 	</head>
 	<body>
-		<input id="file" type="file"/>
-		<input type="button" value="send" onclick="onClick()"/>
+		<div>
+			<input id="file" type="file"/>
+			<p id="progress"></p>
+		</div>
+		<div>
+			<input type="button" value="send" onclick="onClick()"/>
+		</div>
 		<script th:inline="javascript">
 			/*<![CDATA[*/
 			function onClick() {
@@ -22,6 +27,7 @@
 				});
 				var s3Client = new AWS.S3({params: {Bucket: bucketName}});
 
+				var progress = document.getElementById('progress');
 				var files = document.getElementById('file').files;
 				if (!files.length) {
 					return;
@@ -29,12 +35,17 @@
 				var file = files[0];
 				var key = token + "/" + file.name;
 				var params = {Key: key, ContentType: file.type, Body: file};
-				s3Client.upload(params, function (err, data) {
-					if (err) {
-						return console.log(err.message);
-					}
-					console.log(data);
-				});
+				s3Client.upload(params)
+					.on('httpUploadProgress', function (evt) {
+						console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total) + '%');
+						progress.textContent = parseInt((evt.loaded * 100) / evt.total) + "%";
+					})
+					.send(function (err, data) {
+						if (err) {
+							return console.log(err.message);
+						}
+						console.log(data);
+					});
 			}
 			/*]]>*/
 		</script>

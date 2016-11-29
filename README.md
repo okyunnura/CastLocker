@@ -3,6 +3,13 @@
 ##Build
 gradlew bootRun
 
+##Params
+```
+-Daws.bucketName=${bucket name}
+-Daws.accessKeyId=${access key}
+-Daws.secretKey=${secret key}
+```
+
 ##AWS
 IAM used policy
 ```

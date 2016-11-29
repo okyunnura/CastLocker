@@ -1,10 +1,41 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Download</title>
-	</head>
-	<body>
-		<p th:text="name">test</p>
-	</body>
+<head>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.7.min.js"></script>
+	<meta charset="UTF-8"/>
+	<title>Download</title>
+</head>
+<body>
+<div>
+	<p id="list"></p>
+</div>
+<div>
+	<input type="button" value="load" onclick="onClick()"/>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	function onClick() {
+		var token = /*[[${token}]]*/ "";
+		var accessKeyId = /*[[${credentials.accessKeyId}]]*/ "";
+		var secretAccessKey = /*[[${credentials.secretAccessKey}]]*/ "";
+		var sessionToken = /*[[${credentials.sessionToken}]]*/ "";
+		var bucketName = /*[[${backetName}]]*/ "";
+
+		AWS.config.credentials = new AWS.Credentials({
+			accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken
+		});
+		var s3Client = new AWS.S3({params: {Bucket: bucketName}});
+
+		var list = document.getElementById('list');
+		var params = {prefix:token+"/"};
+		s3Client.listObjects(params, function (err, data) {
+			if (err) {
+				return console.log(err.message);
+			}
+			console.log(data);
+		});
+	}
+	/*]]>*/
+</script>
+</body>
 </html>

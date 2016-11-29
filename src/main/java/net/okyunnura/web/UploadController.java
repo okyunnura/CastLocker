@@ -1,6 +1,7 @@
 package net.okyunnura.web;
 
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Statement;
 import com.amazonaws.auth.policy.actions.S3Actions;
@@ -49,7 +50,7 @@ public class UploadController {
 
 		Statement allActionStatement = new Statement(Statement.Effect.Allow)
 				.withActions(S3Actions.AllS3Actions)
-				.withResources(new S3ObjectResource(applicationProperties.getS3BucketName(), token + "/*"));
+				.withResources(new S3ObjectResource(applicationProperties.getBucketName(), token + "/*"));
 
 		Policy policy = new Policy().withStatements(allActionStatement);
 
@@ -58,7 +59,7 @@ public class UploadController {
 				.withName(token)
 				.withPolicy(policy.toJson());
 
-		AWSSecurityTokenServiceClient client = new AWSSecurityTokenServiceClient(new BasicAWSCredentials(applicationProperties.getAccessKey(), applicationProperties.getSecretKey()));
+		AWSSecurityTokenServiceClient client = new AWSSecurityTokenServiceClient();
 		GetFederationTokenResult result = client.getFederationToken(request);
 
 		Credentials credentials = result.getCredentials();
@@ -68,7 +69,7 @@ public class UploadController {
 		logger.info("expiration:" + credentials.getExpiration().toString());
 
 		model.addAttribute("token", token);
-		model.addAttribute("backetName", applicationProperties.getS3BucketName());
+		model.addAttribute("backetName", applicationProperties.getBucketName());
 		model.addAttribute("credentials", credentials);
 		return "upload";
 	}

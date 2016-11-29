@@ -1,53 +1,53 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
-	<head>
-		<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.7.min.js"></script>
-		<meta charset="UTF-8"/>
-		<title>Upload</title>
-	</head>
-	<body>
-		<div>
-			<input id="file" type="file"/>
-			<p id="progress"></p>
-		</div>
-		<div>
-			<input type="button" value="send" onclick="onClick()"/>
-		</div>
-		<script th:inline="javascript">
-			/*<![CDATA[*/
-			function onClick() {
-				var token = /*[[${token}]]*/ "";
-				var accessKeyId = /*[[${credentials.accessKeyId}]]*/ "";
-				var secretAccessKey = /*[[${credentials.secretAccessKey}]]*/ "";
-				var sessionToken = /*[[${credentials.sessionToken}]]*/ "";
-				var bucketName = /*[[${backetName}]]*/ "";
+<head>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.7.min.js"></script>
+	<meta charset="UTF-8"/>
+	<title>Upload</title>
+</head>
+<body>
+<div>
+	<input id="file" type="file"/>
+	<p id="progress"></p>
+</div>
+<div>
+	<input type="button" value="send" onclick="onClick()"/>
+</div>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	function onClick() {
+		var token = /*[[${token}]]*/ "";
+		var accessKeyId = /*[[${credentials.accessKeyId}]]*/ "";
+		var secretAccessKey = /*[[${credentials.secretAccessKey}]]*/ "";
+		var sessionToken = /*[[${credentials.sessionToken}]]*/ "";
+		var bucketName = /*[[${backetName}]]*/ "";
 
-				AWS.config.credentials = new AWS.Credentials({
-					accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken
-				});
-				var s3Client = new AWS.S3({params: {Bucket: bucketName}});
+		AWS.config.credentials = new AWS.Credentials({
+			accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken
+		});
+		var s3Client = new AWS.S3({params: {Bucket: bucketName}});
 
-				var progress = document.getElementById('progress');
-				var files = document.getElementById('file').files;
-				if (!files.length) {
-					return;
+		var progress = document.getElementById('progress');
+		var files = document.getElementById('file').files;
+		if (!files.length) {
+			return;
+		}
+		var file = files[0];
+		var key = token + "/" + file.name;
+		var params = {Key: key, ContentType: file.type, Body: file};
+		s3Client.upload(params)
+			.on('httpUploadProgress', function (evt) {
+				console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total) + '%');
+				progress.textContent = parseInt((evt.loaded * 100) / evt.total) + "%";
+			})
+			.send(function (err, data) {
+				if (err) {
+					return console.log(err.message);
 				}
-				var file = files[0];
-				var key = token + "/" + file.name;
-				var params = {Key: key, ContentType: file.type, Body: file};
-				s3Client.upload(params)
-					.on('httpUploadProgress', function (evt) {
-						console.log("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total) + '%');
-						progress.textContent = parseInt((evt.loaded * 100) / evt.total) + "%";
-					})
-					.send(function (err, data) {
-						if (err) {
-							return console.log(err.message);
-						}
-						console.log(data);
-					});
-			}
-			/*]]>*/
-		</script>
-	</body>
+				console.log(data);
+			});
+	}
+	/*]]>*/
+</script>
+</body>
 </html>

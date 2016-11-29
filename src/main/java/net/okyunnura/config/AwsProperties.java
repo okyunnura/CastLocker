@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(AwsProperties.PREFIX)
 public class AwsProperties {
 	public static final String PREFIX = "aws";
-	private String accessKey;
+	private String accessKeyId;
 	private String secretKey;
-	private String s3BucketName;
+	private String bucketName;
 }

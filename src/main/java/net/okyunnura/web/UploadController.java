@@ -48,9 +48,11 @@ public class UploadController {
 	@RequestMapping(value = "/{token}", method = RequestMethod.GET)
 	public String page(@PathVariable String token, Model model) {
 
+		String bucketName = applicationProperties.getBucketName();
+
 		Statement allActionStatement = new Statement(Statement.Effect.Allow)
 				.withActions(S3Actions.AllS3Actions)
-				.withResources(new S3ObjectResource(applicationProperties.getBucketName(), token + "/*"));
+				.withResources(new S3ObjectResource(bucketName, token + "/*"));
 
 		Policy policy = new Policy().withStatements(allActionStatement);
 
@@ -69,7 +71,7 @@ public class UploadController {
 		logger.info("expiration:" + credentials.getExpiration().toString());
 
 		model.addAttribute("token", token);
-		model.addAttribute("backetName", applicationProperties.getBucketName());
+		model.addAttribute("backetName", bucketName);
 		model.addAttribute("credentials", credentials);
 		return "upload";
 	}

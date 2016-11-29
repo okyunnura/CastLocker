@@ -7,7 +7,7 @@
 </head>
 <body>
 <div>
-	<p id="list"></p>
+	<ul id="list"></ul>
 </div>
 <div>
 	<input type="button" value="load" onclick="onClick()"/>
@@ -27,12 +27,21 @@
 		var s3Client = new AWS.S3({params: {Bucket: bucketName}});
 
 		var list = document.getElementById('list');
-		var params = {Prefix:token+"/"};
+		var prefix = token + "/";
+		var params = {Prefix: prefix};
 		s3Client.listObjects(params, function (err, data) {
 			if (err) {
 				return console.log(err.message);
 			}
 			console.log(data);
+			for (var content of data.Contents) {
+				var filename = content.Key.replace(prefix, "");
+				console.log(filename);
+				var li = document.createElement("li");
+				var text = document.createTextNode(filename);
+				li.appendChild(text);
+				list.appendChild(li);
+			}
 		});
 	}
 	/*]]>*/

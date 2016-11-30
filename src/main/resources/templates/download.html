@@ -7,44 +7,9 @@
 </head>
 <body>
 <div>
-	<ul id="list"></ul>
+	<ul id="list">
+		<li th:each="item : ${list}"><a th:href="${item.value}" th:text="${item.key}"></a></li>
+	</ul>
 </div>
-<div>
-	<input type="button" value="load" onclick="onClick()"/>
-</div>
-<script th:inline="javascript">
-	/*<![CDATA[*/
-	function onClick() {
-		var token = /*[[${token}]]*/ "";
-		var accessKeyId = /*[[${credentials.accessKeyId}]]*/ "";
-		var secretAccessKey = /*[[${credentials.secretAccessKey}]]*/ "";
-		var sessionToken = /*[[${credentials.sessionToken}]]*/ "";
-		var bucketName = /*[[${backetName}]]*/ "";
-
-		AWS.config.credentials = new AWS.Credentials({
-			accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken
-		});
-		var s3Client = new AWS.S3({params: {Bucket: bucketName}});
-
-		var list = document.getElementById('list');
-		var prefix = token + "/";
-		var params = {Prefix: prefix};
-		s3Client.listObjects(params, function (err, data) {
-			if (err) {
-				return console.log(err.message);
-			}
-			console.log(data);
-			for (var content of data.Contents) {
-				var filename = content.Key.replace(prefix, "");
-				console.log(filename);
-				var li = document.createElement("li");
-				var text = document.createTextNode(filename);
-				li.appendChild(text);
-				list.appendChild(li);
-			}
-		});
-	}
-	/*]]>*/
-</script>
 </body>
 </html>

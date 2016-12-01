@@ -78,6 +78,7 @@ public class DownloadController {
 		ListObjectsV2Result listResult = s3.listObjectsV2(bucketName, prefix);
 		List<Pair> list = listResult.getObjectSummaries().stream().map(s3ObjectSummary -> new Pair<>(s3ObjectSummary.getKey().replace(prefix, ""), s3.generatePresignedUrl(bucketName, s3ObjectSummary.getKey(), expiration, HttpMethod.GET))).collect(Collectors.toList());
 
+		model.addAttribute("token", token);
 		model.addAttribute("list", list);
 
 		return "download";

@@ -7,6 +7,9 @@
 </head>
 <body>
 <div>
+	<a th:href="@{/upload/{token}(token=${token})}">→ upload</a>
+</div>
+<div>
 	<ul id="list">
 		<li th:each="item : ${list}"><a th:href="${item.value}" th:text="${item.key}"></a></li>
 	</ul>

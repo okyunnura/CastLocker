@@ -1,11 +1,15 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:ht="http://www.w3.org/1999/xhtml"
+	  lang="ja">
 <head>
 	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.7.min.js"></script>
 	<meta charset="UTF-8"/>
 	<title>Upload</title>
 </head>
 <body>
+<div>
+	<a th:href="@{/download/{token}(token=${token})}">→ download</a>
+</div>
 <div>
 	<input id="file" type="file"/>
 	<p id="progress"></p>

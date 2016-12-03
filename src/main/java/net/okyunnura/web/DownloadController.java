@@ -9,7 +9,10 @@ import com.amazonaws.auth.policy.resources.S3BucketResource;
 import com.amazonaws.auth.policy.resources.S3ObjectResource;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.amazonaws.services.securitytoken.model.Credentials;
 import com.amazonaws.services.securitytoken.model.GetFederationTokenRequest;
@@ -29,6 +32,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Controller
@@ -76,7 +80,13 @@ public class DownloadController {
 		BasicSessionCredentials sessionCredentials = new BasicSessionCredentials(credentials.getAccessKeyId(), credentials.getSecretAccessKey(), credentials.getSessionToken());
 		AmazonS3 s3 = new AmazonS3Client(sessionCredentials);
 		ListObjectsV2Result listResult = s3.listObjectsV2(bucketName, prefix);
-		List<Pair> list = listResult.getObjectSummaries().stream().map(s3ObjectSummary -> new Pair<>(s3ObjectSummary.getKey().replace(prefix, ""), s3.generatePresignedUrl(bucketName, s3ObjectSummary.getKey(), expiration, HttpMethod.GET))).collect(Collectors.toList());
+		List<Pair> list = listResult.getObjectSummaries().stream().map((Function<S3ObjectSummary, Pair>) s3ObjectSummary -> {
+			String key = s3ObjectSummary.getKey().replace(prefix, "");
+			ResponseHeaderOverrides overrides = new ResponseHeaderOverrides().withContentDisposition(key);
+			GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucketName, s3ObjectSummary.getKey(), HttpMethod.GET).withExpiration(expiration).withResponseHeaders(overrides);
+			String value = s3.generatePresignedUrl(urlRequest).toString();
+			return new Pair<>(key, value);
+		}).collect(Collectors.toList());
 
 		model.addAttribute("token", token);
 		model.addAttribute("list", list);

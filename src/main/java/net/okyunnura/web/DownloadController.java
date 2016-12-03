@@ -53,13 +53,13 @@ public class DownloadController {
 		String bucketName = applicationProperties.getBucketName();
 		String prefix = token + "/";
 
-		Statement listActionStatement = new Statement(Statement.Effect.Allow)
-				.withActions(S3Actions.ListObjects)
+		Statement downloadStatement = new Statement(Statement.Effect.Allow)
+				.withActions(S3Actions.ListObjects, S3Actions.GetObject)
 				.withResources(new S3BucketResource(bucketName),
 						new S3ObjectResource(bucketName, token),
 						new S3ObjectResource(bucketName, prefix + "*"));
 
-		Policy policy = new Policy().withStatements(listActionStatement);
+		Policy policy = new Policy().withStatements(downloadStatement);
 
 		GetFederationTokenRequest request = new GetFederationTokenRequest()
 				.withName(token)

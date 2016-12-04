@@ -49,10 +49,11 @@ public class UploadController {
 	public String page(@PathVariable String token, Model model) {
 
 		String bucketName = applicationProperties.getBucketName();
+		String prefix = token + "/";
 
 		Statement allActionStatement = new Statement(Statement.Effect.Allow)
 				.withActions(S3Actions.AllS3Actions)
-				.withResources(new S3ObjectResource(bucketName, token + "/*"));
+				.withResources(new S3ObjectResource(bucketName, prefix + "*"));
 
 		Policy policy = new Policy().withStatements(allActionStatement);
 
@@ -65,10 +66,6 @@ public class UploadController {
 		GetFederationTokenResult result = client.getFederationToken(request);
 
 		Credentials credentials = result.getCredentials();
-		logger.info("accesskey:" + credentials.getAccessKeyId());
-		logger.info("secretkey:" + credentials.getSecretAccessKey());
-		logger.info("sessiontoken:" + credentials.getSessionToken());
-		logger.info("expiration:" + credentials.getExpiration().toString());
 
 		model.addAttribute("token", token);
 		model.addAttribute("backetName", bucketName);

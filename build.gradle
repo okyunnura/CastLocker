@@ -26,6 +26,15 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
+apply plugin: 'idea'
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+    }
+}
+
 jar {
     baseName = 'castlocker'
     version = '0.0.1.BUILD-SNAPSHOT'

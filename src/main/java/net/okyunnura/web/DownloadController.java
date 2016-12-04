@@ -69,11 +69,6 @@ public class DownloadController {
 		GetFederationTokenResult result = client.getFederationToken(request);
 
 		Credentials credentials = result.getCredentials();
-		logger.info("accesskey:" + credentials.getAccessKeyId());
-		logger.info("secretkey:" + credentials.getSecretAccessKey());
-		logger.info("sessiontoken:" + credentials.getSessionToken());
-		logger.info("expiration:" + credentials.getExpiration().toString());
-
 		LocalDateTime expire = LocalDateTime.now().plusHours(1);
 		Date expiration = Date.from(expire.atZone(ZoneId.systemDefault()).toInstant());
 

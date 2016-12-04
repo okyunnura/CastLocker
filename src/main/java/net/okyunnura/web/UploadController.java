@@ -68,7 +68,7 @@ public class UploadController {
 		Credentials credentials = result.getCredentials();
 
 		model.addAttribute("token", token);
-		model.addAttribute("backetName", bucketName);
+		model.addAttribute("bucketName", bucketName);
 		model.addAttribute("credentials", credentials);
 		return "upload";
 	}

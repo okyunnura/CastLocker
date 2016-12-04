@@ -82,7 +82,7 @@ public class DownloadController {
 		ListObjectsV2Result listResult = s3.listObjectsV2(bucketName, prefix);
 		List<Pair> list = listResult.getObjectSummaries().stream().map((Function<S3ObjectSummary, Pair>) s3ObjectSummary -> {
 			String key = s3ObjectSummary.getKey().replace(prefix, "");
-			ResponseHeaderOverrides overrides = new ResponseHeaderOverrides().withContentDisposition(key);
+			ResponseHeaderOverrides overrides = new ResponseHeaderOverrides().withContentDisposition("attachment");
 			GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucketName, s3ObjectSummary.getKey(), HttpMethod.GET).withExpiration(expiration).withResponseHeaders(overrides);
 			String value = s3.generatePresignedUrl(urlRequest).toString();
 			return new Pair<>(key, value);

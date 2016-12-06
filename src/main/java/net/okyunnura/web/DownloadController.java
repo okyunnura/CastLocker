@@ -54,9 +54,8 @@ public class DownloadController {
 		String prefix = token + "/";
 
 		Statement downloadStatement = new Statement(Statement.Effect.Allow)
-				.withActions(S3Actions.ListObjects, S3Actions.GetObject)
-				.withResources(new S3BucketResource(bucketName),
-						new S3ObjectResource(bucketName, token),
+				.withActions(S3Actions.GetObject)
+				.withResources(new S3ObjectResource(bucketName, token),
 						new S3ObjectResource(bucketName, prefix + "*"));
 
 		Policy policy = new Policy().withStatements(downloadStatement);
@@ -73,13 +72,14 @@ public class DownloadController {
 		Date expiration = Date.from(expire.atZone(ZoneId.systemDefault()).toInstant());
 
 		BasicSessionCredentials sessionCredentials = new BasicSessionCredentials(credentials.getAccessKeyId(), credentials.getSecretAccessKey(), credentials.getSessionToken());
-		AmazonS3 s3 = new AmazonS3Client(sessionCredentials);
-		ListObjectsV2Result listResult = s3.listObjectsV2(bucketName, prefix);
+		AmazonS3 presignedClient = new AmazonS3Client(sessionCredentials);
+		AmazonS3 listClient = new AmazonS3Client();
+		ListObjectsV2Result listResult = listClient.listObjectsV2(bucketName, prefix);
 		List<Pair> list = listResult.getObjectSummaries().stream().map((Function<S3ObjectSummary, Pair>) s3ObjectSummary -> {
 			String key = s3ObjectSummary.getKey().replace(prefix, "");
 			ResponseHeaderOverrides overrides = new ResponseHeaderOverrides().withContentDisposition("attachment");
 			GeneratePresignedUrlRequest urlRequest = new GeneratePresignedUrlRequest(bucketName, s3ObjectSummary.getKey(), HttpMethod.GET).withExpiration(expiration).withResponseHeaders(overrides);
-			String value = s3.generatePresignedUrl(urlRequest).toString();
+			String value = presignedClient.generatePresignedUrl(urlRequest).toString();
 			return new Pair<>(key, value);
 		}).collect(Collectors.toList());
 

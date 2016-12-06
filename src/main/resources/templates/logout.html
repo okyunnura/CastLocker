@@ -2,13 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
 	<meta charset="UTF-8"/>
-	<title>Startup</title>
+	<title>Logout</title>
 </head>
 <body>
-<form th:action="@{/startup}" method="post">
-	<div>
-		<label>password:</label><input id="password" type="text" />
-	</div>
+<form th:action="@{/logout}" method="post">
 	<div>
 		<input type="submit" value="create"/>
 	</div>

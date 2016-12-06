@@ -35,16 +35,6 @@ public class UploadController {
 		this.applicationProperties = applicationProperties;
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String generate(RedirectAttributes redirectAttributes) {
-
-		String token = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
-
-		redirectAttributes.getFlashAttributes().clear();
-		redirectAttributes.addAttribute("token", token);
-		return "redirect:/upload/{token}";
-	}
-
 	@RequestMapping(value = "/{token}", method = RequestMethod.GET)
 	public String page(@PathVariable String token, Model model) {
 

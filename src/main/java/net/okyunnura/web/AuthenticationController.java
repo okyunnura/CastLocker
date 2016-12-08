@@ -22,7 +22,7 @@ public class AuthenticationController {
 		return "logout";
 	}
 
-	@RequestMapping(path = "/login", method = RequestMethod.POST)
+	@RequestMapping(path = "/logout", method = RequestMethod.POST)
 	public String logoutRedirect() {
 		return "redirect:/startup";
 	}

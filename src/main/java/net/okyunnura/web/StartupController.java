@@ -21,12 +21,12 @@ public class StartupController {
 
 	private final AwsProperties applicationProperties;
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	@Autowired
-	public StartupController(AwsProperties applicationProperties) {
+	public StartupController(AwsProperties applicationProperties, UserRepository userRepository) {
 		this.applicationProperties = applicationProperties;
+		this.userRepository = userRepository;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

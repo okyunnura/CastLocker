@@ -24,10 +24,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.formLogin()
 				.loginPage("/login")
 				.usernameParameter("username").passwordParameter("password")
-				.loginProcessingUrl("/login/auth").failureUrl("/login/error")
+				.loginProcessingUrl("/login/auth").failureUrl("/login?error")
 				.permitAll();
 		http.logout()
-				.logoutUrl("/logout").permitAll().logoutSuccessUrl("/login")
+				.logoutUrl("/logout").permitAll()
+				.logoutSuccessUrl("/login")
 				.deleteCookies("JSESSIONID").invalidateHttpSession(true);
 	}
 }

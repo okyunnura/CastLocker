@@ -3,9 +3,15 @@ package net.okyunnura.web;
 import net.okyunnura.config.AwsProperties;
 import net.okyunnura.entity.User;
 import net.okyunnura.repository.UserRepository;
+import net.okyunnura.service.AuthorizedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,11 +27,14 @@ public class StartupController {
 
 	private final AwsProperties applicationProperties;
 
+	private final AuthorizedService authorizedService;
+
 	private final UserRepository userRepository;
 
 	@Autowired
-	public StartupController(AwsProperties applicationProperties, UserRepository userRepository) {
+	public StartupController(AwsProperties applicationProperties, AuthorizedService authorizedService, UserRepository userRepository) {
 		this.applicationProperties = applicationProperties;
+		this.authorizedService = authorizedService;
 		this.userRepository = userRepository;
 	}
 
@@ -38,12 +47,18 @@ public class StartupController {
 	public String generate(@RequestParam String password, RedirectAttributes redirectAttributes) {
 		String token = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
 
+		StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 		User user = new User();
 		user.setUsername(token);
-		user.setPassword(password);
+		user.setPassword(encoder.encode(password));
 		user.setRole(User.Role.UPLOAD);
 
-		userRepository.save(user);
+		userRepository.saveAndFlush(user);
+
+		UserDetails userDetails = authorizedService.loadUserByUsername(token);
+
+		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		redirectAttributes.getFlashAttributes().clear();
 		redirectAttributes.addAttribute("token", token);

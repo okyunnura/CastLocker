@@ -1,5 +1,6 @@
 package net.okyunnura.config;
 
+import net.okyunnura.entity.User;
 import net.okyunnura.service.AuthorizedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -31,8 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/", "/startup").permitAll()
-				.anyRequest()
-				.authenticated();
+				.antMatchers("/upload/**").hasRole(User.Role.UPLOAD.name())
+				.antMatchers("/download/**").hasRole(User.Role.DOWNLOAD.name())
+				.anyRequest().authenticated();
 		http.formLogin()
 				.loginPage("/login")
 				.usernameParameter("username").passwordParameter("password")

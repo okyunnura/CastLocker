@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
@@ -46,12 +47,14 @@ public class StartupController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String generate(@RequestParam String password, RedirectAttributes redirectAttributes) {
 		String token = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase();
+		LocalDateTime expiredAt = LocalDateTime.now().plusDays(7);
 
 		StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 		User user = new User();
 		user.setUsername(token);
 		user.setPassword(encoder.encode(password));
 		user.setRole(User.Role.UPLOAD);
+		user.setExpiredAt(expiredAt);
 
 		userRepository.saveAndFlush(user);
 

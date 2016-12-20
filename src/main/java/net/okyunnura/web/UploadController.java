@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
@@ -72,6 +73,7 @@ public class UploadController {
 	@RequestMapping(value = "/downloader/{token}", method = RequestMethod.POST)
 	public String downloader(@PathVariable String token,
 							 @RequestParam String password,
+							 @RequestParam LocalDateTime expiredAt,
 							 Model model,
 							 RedirectAttributes redirectAttributes) {
 
@@ -84,7 +86,7 @@ public class UploadController {
 		user.setUsername(username);
 		user.setPassword(encoder.encode(password));
 		user.setRole(User.Role.DOWNLOAD);
-		user.setExpiredAt();
+		user.setExpiredAt(expiredAt);
 
 		userRepository.saveAndFlush(user);
 

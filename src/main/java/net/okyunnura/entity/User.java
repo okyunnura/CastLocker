@@ -4,16 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Collection;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
@@ -31,10 +24,13 @@ public class User {
 	@Id
 	private String username;
 
-	@Column
+	@Column(nullable=false)
 	private String password;
 
-	@Column
+	@Column(nullable=false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
+
+	@Column(nullable=false)
+	private LocalDateTime expiredAt;
 }

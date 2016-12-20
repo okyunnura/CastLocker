@@ -13,6 +13,14 @@
 	<input id="file" type="file"/>
 	<p id="progress"></p>
 </div>
+<form th:action="@{/upload/}" method="post">
+	<div>
+		<label>password:</label><input name="password" type="text"/>
+	</div>
+	<div>
+		<input type="submit" value="create"/>
+	</div>
+</form>
 <div>
 	<input type="button" value="send" onclick="onClick()"/>
 </div>

@@ -21,6 +21,11 @@
 		<input type="submit" value="create"/>
 	</div>
 </form>
+<ul>
+	<li th:each="child : ${children}">
+		<span th:text="${child.username}"></span>&nbsp;<span th:text="${child.expiredAt}"></span>
+	</li>
+</ul>
 <div>
 	<input type="button" value="send" onclick="onClick()"/>
 </div>

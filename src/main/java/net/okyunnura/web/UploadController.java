@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -72,11 +70,12 @@ public class UploadController {
 		Credentials credentials = result.getCredentials();
 
 		User authentication = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Set<User> children = userRepository.findAllByParent(authentication);
+		List<User> children = userRepository.findAllByParent(authentication);
 
 		model.addAttribute("token", token);
 		model.addAttribute("bucketName", bucketName);
 		model.addAttribute("credentials", credentials);
+		model.addAttribute("children", children);
 		return "upload";
 	}
 

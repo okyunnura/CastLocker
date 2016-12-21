@@ -87,6 +87,7 @@ public class UploadController {
 		user.setPassword(encoder.encode(password));
 		user.setRole(User.Role.DOWNLOAD);
 		user.setExpiredAt(expiredAt);
+		user.setParent(authentication);
 
 		userRepository.saveAndFlush(user);
 

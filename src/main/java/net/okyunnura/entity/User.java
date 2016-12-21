@@ -22,15 +22,22 @@ public class User {
 	}
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+
+	@Column(length = 200, nullable = false, unique = true)
 	private String username;
 
-	@Column(nullable=false)
+	@Column(length = 500, nullable = false)
 	private String password;
 
-	@Column(nullable=false)
+	@Column(length = 100, nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private LocalDateTime expiredAt;
+
+	@ManyToOne
+	private User parent;
 }

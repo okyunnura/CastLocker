@@ -11,10 +11,12 @@ import com.amazonaws.services.securitytoken.model.GetFederationTokenResult;
 import net.okyunnura.config.AwsProperties;
 import net.okyunnura.entity.User;
 import net.okyunnura.repository.UserRepository;
+import net.okyunnura.service.AuthorizedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,10 +38,13 @@ public class UploadController {
 
 	private final UserRepository userRepository;
 
+	private final AuthorizedService authorizedService;
+
 	@Autowired
-	public UploadController(AwsProperties applicationProperties, UserRepository userRepository) {
+	public UploadController(AwsProperties applicationProperties, UserRepository userRepository, AuthorizedService authorizedService) {
 		this.applicationProperties = applicationProperties;
 		this.userRepository = userRepository;
+		this.authorizedService = authorizedService;
 	}
 
 	@RequestMapping(value = "/{token}", method = RequestMethod.GET)
@@ -73,9 +78,9 @@ public class UploadController {
 	@RequestMapping(value = "/downloader/{token}", method = RequestMethod.POST)
 	public String downloader(@PathVariable String token,
 							 @RequestParam String password,
-							 @RequestParam LocalDateTime expiredAt,
 							 Model model,
 							 RedirectAttributes redirectAttributes) {
+		LocalDateTime expiredAt = LocalDateTime.now().plusDays(7);
 
 		User authentication = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

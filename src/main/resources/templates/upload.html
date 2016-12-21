@@ -13,7 +13,7 @@
 	<input id="file" type="file"/>
 	<p id="progress"></p>
 </div>
-<form th:action="@{/upload/}" method="post">
+<form th:action="@{/upload/downloader/{token}(token=${token})}" method="post">
 	<div>
 		<label>password:</label><input name="password" type="text"/>
 	</div>

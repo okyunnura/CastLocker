@@ -38,6 +38,6 @@ public class User {
 	@Column(nullable = false)
 	private LocalDateTime expiredAt;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User parent;
 }

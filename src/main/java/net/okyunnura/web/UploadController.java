@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -68,6 +70,9 @@ public class UploadController {
 		GetFederationTokenResult result = client.getFederationToken(request);
 
 		Credentials credentials = result.getCredentials();
+
+		User authentication = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Set<User> children = userRepository.findAllByParent(authentication);
 
 		model.addAttribute("token", token);
 		model.addAttribute("bucketName", bucketName);

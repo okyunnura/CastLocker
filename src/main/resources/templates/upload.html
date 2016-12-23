@@ -23,7 +23,7 @@
 </form>
 <ul>
 	<li th:each="child : ${children}">
-		<span th:text="${child.username}"></span>&nbsp;<span th:text="${child.expiredAt}"></span>
+		<span th:text="${child.id}"></span>&nbsp;<span th:text="${child.username}"></span>&nbsp;<span th:text="${child.expiredAt}"></span>
 	</li>
 </ul>
 <div>

@@ -1,9 +1,11 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
-	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.7.min.js"></script>
 	<meta charset="UTF-8"/>
 	<title>Upload</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/semantic.css}"/>
+	<script th:src="@{/js/semantic.js}"></script>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.7.min.js"></script>
 </head>
 <body>
 <div>
@@ -14,11 +16,11 @@
 	<p id="progress"></p>
 </div>
 <form th:action="@{/upload/downloader/{token}(token=${token})}" method="post">
-	<div>
-		<label>password:</label><input name="password" type="text"/>
+	<div class="ui input">
+		<input name="password" type="text" placeholder="password"/>
 	</div>
 	<div>
-		<input type="submit" value="create"/>
+		<button class="ui button">create</button>
 	</div>
 </form>
 <ul>
@@ -27,7 +29,7 @@
 	</li>
 </ul>
 <div>
-	<input type="button" value="send" onclick="onClick()"/>
+	<button class="ui button" onclick="onClick()">send</button>
 </div>
 <script th:inline="javascript">
 	/*<![CDATA[*/

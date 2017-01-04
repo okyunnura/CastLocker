@@ -3,14 +3,16 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>Startup</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/semantic.css}"/>
+	<script th:src="@{/js/semantic.js}"></script>
 </head>
 <body>
-<form th:action="@{/startup}" method="post">
-	<div>
-		<label>password:</label><input name="password" type="text"/>
+<form th:action="@{/startup}" method="post" class="ui large form">
+	<div class="ui input">
+		<input name="password" type="text" placeholder="password"/>
 	</div>
 	<div>
-		<input type="submit" value="create"/>
+		<button class="ui button">create</button>
 	</div>
 </form>
 </body>

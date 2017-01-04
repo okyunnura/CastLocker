@@ -3,18 +3,45 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>Login</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/semantic.css}"/>
+	<script th:src="@{/js/semantic.js}"></script>
+	<style type="text/css">
+		body > .grid {
+			height: 100%;
+		}
+
+		.column {
+			max-width: 450px;
+		}
+	</style>
 </head>
 <body>
-<form th:action="@{/login/auth}" method="post">
-	<div>
-		<input id="username" name="username" type="text"/>
+<div class="ui middle aligned center aligned grid">
+	<div class="column">
+		<h2 class="ui image header">
+			<i class="user icon"></i>
+			<div class="content">Login</div>
+		</h2>
+		<form class="ui large form" method="post" th:action="@{/login/auth}">
+			<div class="ui div stacked segment">
+				<div class="field">
+					<div class="ui left icon input">
+						<i class="user icon"></i>
+						<input id="username" name="username" type="text" placeholder="username"/>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input">
+						<i class="lock icon"></i>
+						<input id="password" name="password" type="password" placeholder="password"/>
+					</div>
+				</div>
+				<div class="field">
+					<button class="ui fluid large submit button">login</button>
+				</div>
+			</div>
+		</form>
 	</div>
-	<div>
-		<input id="password" name="password" type="password"/>
-	</div>
-	<div>
-		<input name="submit" type="submit" value="login"/>
-	</div>
-</form>
+</div>
 </body>
 </html>

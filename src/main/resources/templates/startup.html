@@ -1,19 +1,27 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
-<head>
-	<meta charset="UTF-8"/>
-	<title>Startup</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/semantic.css}"/>
-	<script th:src="@{/js/semantic.js}"></script>
-</head>
+<head th:replace="layout::head('Startup')"></head>
 <body>
-<form th:action="@{/startup}" method="post" class="ui large form">
-	<div class="ui input">
-		<input name="password" type="text" placeholder="password"/>
+<div class="ui middle aligned center aligned grid">
+	<div class="column">
+		<h2 class="ui image header">
+			<i class="user icon"></i>
+			<div class="content">Startup</div>
+		</h2>
+		<form class="ui large form" method="post" th:action="@{/startup}">
+			<div class="ui div stacked segment">
+				<div class="field">
+					<div class="ui left icon input">
+						<i class="user icon"></i>
+						<input name="password" type="password" placeholder="password"/>
+					</div>
+				</div>
+				<div class="field">
+					<button class="ui fluid large submit button">Create</button>
+				</div>
+			</div>
+		</form>
 	</div>
-	<div>
-		<button class="ui button">create</button>
-	</div>
-</form>
+</div>
 </body>
 </html>

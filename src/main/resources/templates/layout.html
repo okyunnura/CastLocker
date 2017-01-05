@@ -1,0 +1,20 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head th:fragment="head(title)" th:remove="tag">
+	<meta charset="UTF-8"/>
+	<title th:text="${title}">Login</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/semantic.css}"/>
+	<script th:src="@{/js/semantic.js}"></script>
+	<style type="text/css">
+		body > .grid {
+			height: 100%;
+		}
+
+		.column {
+			max-width: 450px;
+		}
+	</style>
+</head>
+<body>
+</body>
+</html>

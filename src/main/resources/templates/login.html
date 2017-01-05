@@ -1,20 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ja">
-<head>
-	<meta charset="UTF-8"/>
-	<title>Login</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/semantic.css}"/>
-	<script th:src="@{/js/semantic.js}"></script>
-	<style type="text/css">
-		body > .grid {
-			height: 100%;
-		}
-
-		.column {
-			max-width: 450px;
-		}
-	</style>
-</head>
+<head th:replace="layout::head('Login')"></head>
 <body>
 <div class="ui middle aligned center aligned grid">
 	<div class="column">
@@ -27,13 +13,13 @@
 				<div class="field">
 					<div class="ui left icon input">
 						<i class="user icon"></i>
-						<input id="username" name="username" type="text" placeholder="username"/>
+						<input name="username" type="text" placeholder="username"/>
 					</div>
 				</div>
 				<div class="field">
 					<div class="ui left icon input">
 						<i class="lock icon"></i>
-						<input id="password" name="password" type="password" placeholder="password"/>
+						<input name="password" type="password" placeholder="password"/>
 					</div>
 				</div>
 				<div class="field">
